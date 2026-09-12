@@ -4,20 +4,46 @@ import { CASE_STUDIES, CERTIFICATIONS, INTERESTS, LEADERSHIP, PROFILE, SKILL_GRO
 
 const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
+function useScrollEffects(setActiveSection: (id: string) => void) {
+  useEffect(() => {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("is-visible");
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+    const navObserver = new IntersectionObserver((entries) => {
+      const current = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (current) setActiveSection((current.target as HTMLElement).id);
+    }, { rootMargin: "-34% 0px -54% 0px", threshold: [0.05, 0.2, 0.5] });
+
+    document.querySelectorAll<HTMLElement>("main > section:not(.hero)").forEach((element) => revealObserver.observe(element));
+    document.querySelectorAll<HTMLElement>("section[id]").forEach((element) => navObserver.observe(element));
+    return () => {
+      revealObserver.disconnect();
+      navObserver.disconnect();
+    };
+  }, [setActiveSection]);
+}
+
 function Nav({ open, setOpen }: { open: boolean; setOpen: (value: boolean) => void }) {
   const items = [["manifesto", "01 / Approach"], ["work", "02 / Work"], ["skills", "03 / Toolkit"], ["credentials", "04 / Proof"], ["contact", "05 / Contact"]];
+  const [activeSection, setActiveSection] = useState("home");
+  useScrollEffects(setActiveSection);
   return <header className="topbar">
     <button className="mark" data-testid="button-home" onClick={() => scrollTo("home")}><span className="mark-box">AR</span><span>Akhil Reddy / PM portfolio</span></button>
-    <nav className={`nav ${open ? "open" : ""}`} aria-label="Primary navigation">{items.map(([id, label]) => <a key={id} href={`#${id}`} data-testid={`link-${id}`} onClick={() => setOpen(false)}>{label}</a>)}</nav>
+    <nav className={`nav ${open ? "open" : ""}`} aria-label="Primary navigation">{items.map(([id, label]) => <a className={activeSection === id ? "active" : ""} key={id} href={`#${id}`} data-testid={`link-${id}`} onClick={() => setOpen(false)}>{label}</a>)}</nav>
     <button className="menu-button" data-testid="button-menu" onClick={() => setOpen(!open)}><Menu size={18} /> Menu</button>
   </header>;
 }
 
 function Hero() {
   const [profileOpen, setProfileOpen] = useState(false);
-  return <section id="home" className="hero">
+  return <><section id="home" className="hero">
     <div className="container hero-grid">
-      <div className="reveal">
+      <div className="hero-intro">
         <div className="eyebrow"><i className="status-dot" /> {PROFILE.availability}</div>
         <h1>Products<br />begin with<br /><span className="hero-title-blue">problems<span className="hero-title-outline">.</span></span></h1>
         <p className="hero-copy">I'm <strong>{PROFILE.shortName}</strong> — an aspiring product manager who finds the user problem first, then earns the right to build. <span>{PROFILE.tagline}</span></p>
@@ -28,7 +54,7 @@ function Hero() {
         </div>
       </div>
       <aside
-        className={`hero-card reveal ${profileOpen ? "is-expanded" : ""}`}
+        className={`hero-card hero-drop ${profileOpen ? "is-expanded" : ""}`}
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
@@ -57,10 +83,19 @@ function Hero() {
       </aside>
     </div>
     <button className="scroll-note" data-testid="button-scroll-manifesto" onClick={() => scrollTo("manifesto")}>Scroll to explore</button>
-  </section>;
+  </section><MarqueeBand /></>;
 }
 
 function Label({ index, label }: { index: string; label: string }) { return <div className="section-label">{index} / {label}</div>; }
+
+function MarqueeBand() {
+  const content = "DISCOVER  •  DECIDE  •  DELIVER  •  PRODUCT THINKING IN MOTION  •  ";
+  return <div className="ticker-band" aria-label="Product thinking in motion">
+    <div className="ticker-track">
+      <span>{content}</span><span aria-hidden="true">{content}</span>
+    </div>
+  </div>;
+}
 
 function Manifesto() {
   const chapters = [
