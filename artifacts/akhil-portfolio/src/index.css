@@ -41,8 +41,9 @@ button { cursor: pointer; }
   padding: 0 clamp(20px, 4vw, 64px); border-bottom: 1px solid var(--line);
   background: rgba(33,26,37,.86); backdrop-filter: blur(16px);
 }
-.mark { display: inline-flex; align-items: center; gap: 12px; font: 500 11px var(--mono); letter-spacing: .2em; text-transform: uppercase; }
-.mark-box { display: grid; place-items: center; width: 30px; height: 30px; color: #601d2a; background: var(--red-light); border-radius: 4px; font: 700 14px var(--serif); letter-spacing: 0; }
+.mark { display: inline-flex; align-items: center; gap: 12px; padding: 5px 13px 5px 5px; border: 1px solid rgba(255,210,215,.3); border-radius: 999px; color: var(--paper); background: rgba(255,135,146,.08); font: 500 11px var(--mono); letter-spacing: .2em; text-transform: uppercase; transition: border-color .25s ease, background .25s ease, transform .25s ease; }
+.mark:hover { border-color: var(--red); background: rgba(255,135,146,.16); transform: translateY(-2px); }
+.mark-box { display: grid; place-items: center; width: 30px; height: 30px; color: var(--red-light); background: linear-gradient(145deg, rgba(255,135,146,.34), rgba(47,110,228,.28)); border: 1px solid rgba(255,210,215,.58); border-radius: 50%; box-shadow: 0 0 18px rgba(255,135,146,.18); font: 700 14px var(--serif); letter-spacing: 0; }
 .nav { display: flex; gap: clamp(16px, 3vw, 38px); font: 400 10px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .nav a { transition: color .25s ease; }
 .nav a:hover, .nav a.active { color: var(--blue); }

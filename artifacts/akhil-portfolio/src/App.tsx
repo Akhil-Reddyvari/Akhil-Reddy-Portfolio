@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowDown, ArrowUpRight, Award, Download, ExternalLink, Github, Linkedin, Mail, Menu, Phone, Send, Trophy, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Award, ChevronLeft, ChevronRight, Download, ExternalLink, Github, Linkedin, Mail, Menu, Phone, Send, Trophy, X } from "lucide-react";
 import { CASE_STUDIES, CERTIFICATIONS, INTERESTS, LEADERSHIP, PROFILE, SKILL_GROUPS, TEARDOWNS, TECH_PROJECTS } from "./data/portfolio";
 
 const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
