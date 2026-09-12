@@ -14,6 +14,7 @@ function Nav({ open, setOpen }: { open: boolean; setOpen: (value: boolean) => vo
 }
 
 function Hero() {
+  const [profileOpen, setProfileOpen] = useState(false);
   return <section id="home" className="hero">
     <div className="container hero-grid">
       <div className="reveal">
@@ -26,13 +27,33 @@ function Hero() {
           <a className="button" data-testid="link-linkedin-hero" href={PROFILE.linkedin} target="_blank" rel="noreferrer"><Linkedin size={14} /> LinkedIn</a>
         </div>
       </div>
-      <aside className="hero-card reveal">
-        <div className="card-top"><span>Candidate profile</span><span>2026 / 01</span></div>
-        <h2>{PROFILE.name}</h2><div className="role">{PROFILE.role}</div>
+      <aside
+        className={`hero-card reveal ${profileOpen ? "is-expanded" : ""}`}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          e.currentTarget.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+          e.currentTarget.style.setProperty("--my", `${e.clientY - rect.top}px`);
+        }}
+        data-testid="profile-card"
+      >
+        <div className="card-top"><span><i className="card-live-dot" /> Candidate profile</span><span>2026 / 01</span></div>
+        <button className="card-identity" onClick={() => setProfileOpen(!profileOpen)} aria-expanded={profileOpen} data-testid="button-toggle-profile">
+          <span>
+            <h2>{PROFILE.name}</h2><div className="role">{PROFILE.role}</div>
+          </span>
+          <span className="card-toggle" aria-hidden="true">{profileOpen ? "Close" : "Open"} <ArrowUpRight size={13} /></span>
+        </button>
         <div className="card-data">
           {["B.Tech — AI & Data Science", "Amrita Vishwa Vidyapeetham", PROFILE.location, "Discovery → Strategy → Delivery"].map((value, i) => <div className="meta-row" key={value}><span>{["Education", "University", "Base", "Focus"][i]}</span><span>{value}</span></div>)}
         </div>
         <div className="card-band"><span>4 case studies</span><span>1 pivot · 2 builds · 1 strategy</span></div>
+        <div className="card-reveal" aria-hidden={!profileOpen}>
+          <p>Available for the next product problem worth unpacking.</p>
+          <div className="card-reveal-links">
+            <a href={`mailto:${PROFILE.email}`} onClick={(e) => e.stopPropagation()}><Mail size={13} /> Email Akhil</a>
+            <a href={`tel:${PROFILE.phone.replace(/\s/g, "")}`} onClick={(e) => e.stopPropagation()}><Phone size={13} /> Call</a>
+          </div>
+        </div>
       </aside>
     </div>
     <button className="scroll-note" data-testid="button-scroll-manifesto" onClick={() => scrollTo("manifesto")}>Scroll to explore</button>
