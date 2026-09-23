@@ -135,7 +135,38 @@ function Contact() {
 }
 
 function CaseModal({ item, close }: { item: typeof CASE_STUDIES[number]; close: () => void }) {
-  return <div className="modal-backdrop" role="presentation" onClick={close}><article className="modal" role="dialog" aria-modal="true" aria-label={item.title} onClick={(e) => e.stopPropagation()}><div className="modal-top"><div><Label index={`§ ${item.index}`} label={item.category} /><h2>{item.title}</h2><p className="modal-tagline">{item.summary}</p>{item.links[0] && <a className="button primary" href={item.links[0].href.startsWith("http") ? item.links[0].href : item.links[0].href} target="_blank" rel="noreferrer" style={{ marginTop: 22 }}>{item.links[0].label} <ExternalLink size={13} /></a>}</div><button className="close" onClick={close} data-testid="button-close-case"><X size={17} /></button></div><div className="modal-grid">{item.sections.map((section) => <div className="modal-section" key={section.key}><h3>{section.label}</h3>{section.body && <p>{section.body}</p>}{section.bullets && <ul>{section.bullets.slice(0, 4).map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>}</div>)}</div></article></div>;
+  const [activeKey, setActiveKey] = useState(item.sections[0]?.key ?? "");
+  const activeIndex = Math.max(0, item.sections.findIndex((section) => section.key === activeKey));
+  const activeSection = item.sections[activeIndex];
+  const goTo = (index: number) => setActiveKey(item.sections[Math.max(0, Math.min(index, item.sections.length - 1))]?.key ?? "");
+
+  return <div className="modal-backdrop" role="presentation" onClick={close}>
+    <article className="modal" role="dialog" aria-modal="true" aria-label={item.title} onClick={(e) => e.stopPropagation()}>
+      <div className="modal-top">
+        <div>
+          <Label index={`§ ${item.index}`} label={item.category} />
+          <h2>{item.title}</h2>
+          <p className="modal-tagline">{item.summary}</p>
+          {item.links[0] && <a className="button primary" href={item.links[0].href} target="_blank" rel="noreferrer" style={{ marginTop: 22 }}>{item.links[0].label} <ExternalLink size={13} /></a>}
+        </div>
+        <button className="close" onClick={close} data-testid="button-close-case"><X size={17} /></button>
+      </div>
+      <div className="modal-progress"><span>Case study flow</span><strong>0{activeIndex + 1} / 0{item.sections.length}</strong><div><i style={{ width: `${((activeIndex + 1) / item.sections.length) * 100}%` }} /></div></div>
+      <div className="modal-tabs" role="tablist" aria-label="Case study sections">
+        {item.sections.map((section, index) => <button className={index === activeIndex ? "is-active" : ""} key={section.key} role="tab" aria-selected={index === activeIndex} onClick={() => setActiveKey(section.key)}><span>0{index + 1}</span>{section.label}</button>)}
+      </div>
+      {activeSection && <div className="modal-section modal-section-active" role="tabpanel" key={activeSection.key}>
+        <h3>{activeSection.label}</h3>
+        {activeSection.body && <p>{activeSection.body}</p>}
+        {activeSection.bullets && <ul>{activeSection.bullets.slice(0, 4).map((bullet) => <li key={bullet}>{bullet}</li>)}</ul>}
+      </div>}
+      <div className="modal-nav">
+        <button className="modal-nav-button" disabled={activeIndex === 0} onClick={() => goTo(activeIndex - 1)}><ChevronLeft size={15} /> Previous</button>
+        <span>Click a chapter to explore the decision</span>
+        <button className="modal-nav-button" disabled={activeIndex === item.sections.length - 1} onClick={() => goTo(activeIndex + 1)}>Next <ChevronRight size={15} /></button>
+      </div>
+    </article>
+  </div>;
 }
 
 export default function App() {
