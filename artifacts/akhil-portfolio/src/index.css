@@ -35,6 +35,8 @@ button { cursor: pointer; }
 ::selection { background: var(--blue); color: var(--ink); }
 
 .site-shell { overflow: hidden; }
+.scroll-progress { position: fixed; top: 0; left: 0; right: 0; z-index: 20; height: 3px; pointer-events: none; background: rgba(57,120,232,.1); }
+.scroll-progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--red), var(--blue)); transition: width .12s ease-out; }
 .topbar {
   position: fixed; z-index: 15; top: 0; left: 0; right: 0; height: 76px;
   display: flex; align-items: center; justify-content: space-between;
@@ -129,8 +131,10 @@ section { position: relative; }
 .outline { color: transparent; -webkit-text-stroke: 1px var(--blue); }
 .section-intro { max-width: 360px; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .manifesto-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 62px; border: 1px solid var(--line); background: var(--line); }
-.manifesto-card { min-height: 260px; padding: 30px; background: var(--ink); transition: background .3s ease; }
-.manifesto-card:hover { background: var(--panel); }
+.manifesto-card { position: relative; min-height: 260px; padding: 30px; overflow: hidden; background: var(--ink); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; }
+.manifesto-card::after, .teardown-card::after, .skill-card::after { content: ""; position: absolute; width: 180px; height: 180px; right: -100px; bottom: -110px; border-radius: 50%; background: radial-gradient(circle, rgba(227,96,112,.18), transparent 68%); opacity: 0; transition: opacity .3s ease, transform .3s ease; pointer-events: none; }
+.manifesto-card:hover, .teardown-card:hover, .skill-card:hover { background: var(--panel); transform: translateY(-6px); box-shadow: 0 14px 26px rgba(72,48,65,.1); }
+.manifesto-card:hover::after, .teardown-card:hover::after, .skill-card:hover::after { opacity: 1; transform: scale(1.25); }
 .index { color: var(--red); font: 11px var(--mono); letter-spacing: .18em; }
 .manifesto-card h3 { margin-top: 38px; font-size: 27px; letter-spacing: -.05em; text-transform: uppercase; }
 .manifesto-card p { margin-top: 18px; color: var(--muted); font-size: 14px; line-height: 1.65; }
@@ -151,7 +155,7 @@ section { position: relative; }
 .case-card:hover .case-arrow { transform: rotate(45deg); background: var(--blue); color: var(--ink); }
 
 .teardown-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 16px; margin-top: 58px; }
-.teardown-card { padding: 28px; border: 1px solid var(--line); background: var(--panel); }
+.teardown-card { position: relative; padding: 28px; border: 1px solid var(--line); background: var(--panel); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; overflow: hidden; }
 .teardown-card:nth-child(2) { margin-top: 44px; }
 .teardown-card:nth-child(3) { grid-column: 1 / -1; width: 58%; margin-left: auto; }
 .teardown-card h3 { font-size: 24px; letter-spacing: -.045em; }
@@ -163,7 +167,7 @@ section { position: relative; }
 .interest-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; }
 .interest { padding: 8px 11px; border: 1px solid rgba(244,134,135,.22); background: var(--red-soft); color: var(--red); font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
 .skill-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
-.skill-card { padding: 22px; border: 1px solid var(--line); background: var(--panel); }
+.skill-card { position: relative; padding: 22px; border: 1px solid var(--line); background: var(--panel); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; overflow: hidden; }
 .skill-card h3 { font-size: 19px; letter-spacing: -.04em; }
 .skill-card h3::after { content: " /"; color: var(--blue); font: 14px var(--mono); }
 .skill-items { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }

@@ -72,7 +72,7 @@ function Hero() {
         <div className="card-data">
           {["B.Tech — AI & Data Science", "Amrita Vishwa Vidyapeetham", PROFILE.location, "Discovery → Strategy → Delivery"].map((value, i) => <div className="meta-row" key={value}><span>{["Education", "University", "Base", "Focus"][i]}</span><span>{value}</span></div>)}
         </div>
-        <div className="card-band"><span>4 case studies</span><span>1 pivot · 2 builds · 1 strategy</span></div>
+        <div className="card-band"><span>5 case studies</span><span>1 pivot · 3 builds · 1 strategy</span></div>
         <div className="card-reveal" aria-hidden={!profileOpen}>
           <p>Available for the next product problem worth unpacking.</p>
           <div className="card-reveal-links">
@@ -95,6 +95,24 @@ function MarqueeBand() {
       <span>{content}</span><span aria-hidden="true">{content}</span>
     </div>
   </div>;
+}
+
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const update = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  return <div className="scroll-progress" aria-hidden="true"><span style={{ width: `${progress}%` }} /></div>;
 }
 
 function Manifesto() {
@@ -172,5 +190,5 @@ function CaseModal({ item, close }: { item: typeof CASE_STUDIES[number]; close: 
 export default function App() {
   const [navOpen, setNavOpen] = useState(false); const [selected, setSelected] = useState<typeof CASE_STUDIES[number] | null>(null);
   useEffect(() => { document.body.style.overflow = selected ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [selected]);
-  return <div className="site-shell"><Nav open={navOpen} setOpen={setNavOpen} /><main><Hero /><Manifesto /><Work onOpen={setSelected} /><Teardowns /><Skills /><Credentials /><Contact /></main>{selected && <CaseModal item={selected} close={() => setSelected(null)} />}</div>;
+  return <div className="site-shell"><ScrollProgress /><Nav open={navOpen} setOpen={setNavOpen} /><main><Hero /><Manifesto /><Work onOpen={setSelected} /><Teardowns /><Skills /><Credentials /><Contact /></main>{selected && <CaseModal item={selected} close={() => setSelected(null)} />}</div>;
 }
