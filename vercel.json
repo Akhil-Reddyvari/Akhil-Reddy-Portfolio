@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm --filter @workspace/akhil-portfolio build",
+  "outputDirectory": "artifacts/akhil-portfolio/dist/public",
+  "installCommand": "pnpm install --frozen-lockfile"
+}
