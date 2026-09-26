@@ -72,7 +72,7 @@ function Hero() {
         <div className="card-data">
           {["B.Tech — AI & Data Science", "Amrita Vishwa Vidyapeetham", PROFILE.location, "Discovery → Strategy → Delivery"].map((value, i) => <div className="meta-row" key={value}><span>{["Education", "University", "Base", "Focus"][i]}</span><span>{value}</span></div>)}
         </div>
-        <div className="card-band"><span>5 case studies</span><span>1 pivot · 3 builds · 1 strategy</span></div>
+        <div className="card-band"><span>4 case studies</span><span>1 discovery · 2 builds · 1 strategy</span></div>
         <div className="card-reveal" aria-hidden={!profileOpen}>
           <p>Available for the next product problem worth unpacking.</p>
           <div className="card-reveal-links">
